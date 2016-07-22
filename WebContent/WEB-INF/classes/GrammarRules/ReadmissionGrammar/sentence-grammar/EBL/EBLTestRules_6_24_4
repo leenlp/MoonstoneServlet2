@@ -1,0 +1,160 @@
+'(
+wordrule
+(
+  (ruleid "AUTO-provide-care-with-patient-needs-rule-0-2016/06/24 22:14:27") 
+  (specialized) 
+  (example-snippet "patient receives no support from family") 
+  (sourceid "provide-care-with-patient-needs-rule") 
+  (concept ":POSSIBLE_LACK_SUPPORT:") 
+  (stype "<SOCIAL_SUPPORT>") 
+  (window 16.0) 
+  (words 
+    ("@AUTO-pre-negation-context-rule-1-2016/06/24 22:14:27@") 
+    ("@patient-rule-1@")))
+
+(
+  (ruleid "AUTO-pre-negation-context-rule-1-2016/06/24 22:14:27") 
+  (specialized) 
+  (intermediate) 
+  (example-snippet "no support from family") 
+  (ordered true) 
+  (sourceid "pre-negation-context-rule") 
+  (concept "?1") 
+  (stype "<SOCIAL_SUPPORT>") 
+  (window 32.0) 
+  (words 
+    ("no") 
+    ("@general-provide-care-rule@")) 
+  (properties 
+    ("directionality" "negated")))
+
+(
+  (ruleid "AUTO-no-care-from-family-implies-lack-of-support-rule-2-2016/06/24 22:15:37") 
+  (specialized) 
+  (example-snippet "family does not care for patient") 
+  (sourceid "no-care-from-family-implies-lack-of-support-rule") 
+  (concept ":POSSIBLE_LACK_SUPPORT:") 
+  (stype "<SOCIAL_SUPPORT>") 
+  (window 16.0) 
+  (words 
+    ("@family-definition-rule@") 
+    ("@AUTO-pre-negation-context-rule-3-2016/06/24 22:15:37@")) 
+  (tests 
+    (neg ?1)))
+
+(
+  (ruleid "AUTO-pre-negation-context-rule-3-2016/06/24 22:15:37") 
+  (specialized) 
+  (intermediate) 
+  (example-snippet "not care for patient") 
+  (ordered true) 
+  (sourceid "pre-negation-context-rule") 
+  (concept "?1") 
+  (stype "<SOCIAL_SUPPORT>") 
+  (window 32.0) 
+  (words 
+    ("not") 
+    ("@AUTO-care-or-support-for-patient-rule-4-2016/06/24 22:15:37@")) 
+  (properties 
+    ("directionality" "negated")))
+
+(
+  (ruleid "AUTO-care-or-support-for-patient-rule-4-2016/06/24 22:15:37") 
+  (specialized) 
+  (intermediate) 
+  (example-snippet "care for patient") 
+  (ordered true) 
+  (sourceid "care-or-support-for-patient-rule") 
+  (concept ":PROVISION_OF_CARE:") 
+  (stype "<SOCIAL_SUPPORT>") 
+  (window 16.0) 
+  (words 
+    ("@general-provide-care-rule@") 
+    ("for") 
+    ("@patient-rule-1@")))
+
+(
+  (ruleid "AUTO-question-answer-negation-rule-5-2016/06/24 22:16:24") 
+  (specialized) 
+  (example-snippet "Is there anyone to assist patient  no") 
+  (ordered true) 
+  (sourceid "question-answer-negation-rule") 
+  (concept ":POSSIBLE_LACK_SUPPORT:") 
+  (stype "<ROOT>") 
+  (window 16.0) 
+  (words 
+    ("@AUTO-passive-event-rule-6-2016/06/24 22:16:24@") 
+    ("no")) 
+  (properties 
+    (directionality negated)) 
+  (tests 
+    ("usesCombinedHeaderSentence" ?*)))
+
+(
+  (ruleid "AUTO-passive-event-rule-6-2016/06/24 22:16:24") 
+  (specialized) 
+  (intermediate) 
+  (example-snippet "Is there anyone to assist patient") 
+  (ordered true) 
+  (sourceid "passive-event-rule") 
+  (concept "?1") 
+  (stype "<PASSIVE_EVENT>") 
+  (window 32.0) 
+  (words 
+    ("@is-auxilliary-word-rule@") 
+    ("@AUTO-event-thing-rule-7-2016/06/24 22:16:24@")) 
+  (properties 
+    (event ?1)))
+
+(
+  (ruleid "AUTO-event-thing-rule-7-2016/06/24 22:16:24") 
+  (specialized) 
+  (intermediate) 
+  (example-snippet "to assist patient") 
+  (ordered true) 
+  (sourceid "event-thing-rule") 
+  (stype "<COMPLEX_EVENT>") 
+  (window 32.0) 
+  (words 
+    ("@AUTO-simple-pp-rule-2-2016/06/03 19:44:13@") 
+    ("@patient-rule-1@")) 
+  (properties 
+    (event ?0) 
+    (object ?1)))
+
+(
+  (ruleid "AUTO-modified-time-expression-rule-12-2016/06/24 22:21:56") 
+  (specialized) 
+  (example-snippet "Prior to admission the pt lived with his wife") 
+  (ordered true) 
+  (sourceid "modified-time-expression-rule") 
+  (concept ":NOT_LIVING_ALONE:") 
+  (stype "<ROOT>") 
+  (window 16.0) 
+  (words 
+    ("@time-modifier-rule@") 
+    ("@AUTO-dative-event-rule-13-2016/06/24 22:21:56@")) 
+  (relations 
+    (time-modifier ?* "?0") 
+    (event ?* "?1")))
+
+(
+  (ruleid "AUTO-dative-event-rule-13-2016/06/24 22:21:56") 
+  (specialized) 
+  (intermediate) 
+  (example-snippet "admission the pt lived with his wife") 
+  (ordered true) 
+  (sourceid "dative-event-rule") 
+  (stype "<COMPLEX_EVENT>") 
+  (window 32.0) 
+  (words 
+    ("@admission-word-rule@") 
+    ("@patient-rule-1@") 
+    ("@AUTO-simple-pp-rule-4-2016/06/08 22:07:09@")) 
+  (properties 
+    (event ?0) 
+    (direct_object ?1) 
+    (indirect_object 
+      (object ?2))))
+
+)

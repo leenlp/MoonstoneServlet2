@@ -1,0 +1,120 @@
+
+Functions I need:  1- Remove last auto-extracted rule(s).  2- Let user edit the new rule before it is stored. 
+
+*****
+He lives close to a nursing home which disqualifies him from Meals on Wheels.
+
+He is disqualified from Meals on Wheels.
+
+Disqualified from getting meals on wheels.
+
+disqualified from meals on wheels
+
+*****
+PROBLEM:  I brought over older rules from home, then started editing those rules rather than copying the new ones to the old environment.  So I have lost any new changes.  If I copy the older to Readmission, I will lose newer changes, but I have done significant work to the older Event-full rules, etc.
+
+CHOICE:  do all new development in the from-home set.  Don't run patient-level reports yet, however, as I may have made changes that affect performance.
+
+LMSW was advised per vascular surgery to assess veteran's family situation to 
+confirm whether veteran has an adequate support system at home. 
+
+family situation to confirm whether veteran has an adequate support
+
+DO:  i- Remove new rules.  Backup old rules.  Use new code.  Go over 668 SS again, then over all training sets SS.  ii- Add code to print out all snippets for a given classification.  Parse those sentences.
+
+*************
+PROBLEM:  When a RE is fully matched, it doesn't get added to the hash table.
+
+Patient lives with assistance from his son
+
+If a phrase intersects but does not fully cover the attached phrases, fail.
+
+? How to tell which rules are called and how much?
+
+COULD:  i-Write method that gets all RuleExpansions from grammar.  For each rule, store a count of the number of expansions, and the number of completed expansions.
+
+***
+? How to disqualify sentences with "want" "I", "plan" and brackets?  How to disqualify headers?
+
+? How to disqualify a header?
+
+? Where to put the header test code?
+
+NOTES:  It has to be independent of location.  
+
+COULD:  i- 
+
+****
+DO:  Add :AT_HOME_STATEMENT: to ontology.  If :PATIENT: is added, or if that concept appears by itself, infer :LIVE_AT_HOME.
+
+Jerel AT BMI:  
+
+
+If he lives in a nursing home, which home?
+
+? How to tell that the sentence is a question?
+
+If the next non-whitespace token is a question mark.
+
+*******************************
+PROBLEM SENTENCES:
+
+Caring for demented wife
+
+He was brought from the nursing home - from the auto rule that matches "he was brought home".  Why does this not fail on interstitial?
+
+Patient has received urgent care - since "urgent care" overlaps "care" it is ignored.
+
+PROBLEMS:  "Caring for demented wife"  This matches :CARE: + :FAMILY:, which also matches "caring family".  
+
+WHY: Specialization of annotation for "caring family" produces :CARING: + :FAMILY:.  :FAMILY: then matches the PP.  If there had been a PP it would have been included in the new rules.  Therefore, there should be some way to ensure that the annotation that produces :FAMILY: is itself word-level.
+
+QUESTIONS:  Why is " patient received urgent care" not prefered over "patient .. care"?
+
+The problem is that the latter contains a target concept.  Based on goodness, it would have been ignored.
+
+THOUGHT:  Could only include the largest TagAnnotations.  If there is a Tag, assume it is correct.  
+
+***
+Thoughts:  If I have found rules for a given subiteration, don't look for more rules in that rubiteration.  IE if I have round rules at 3-4, don't want to look for rules that cover just 3.
+
+COULD:  i- If rules are found, break out of the inner loop:  It will then begin looking at the next item over.  All rules of major length beginning at the current "i" have been found.  Also, 
+
+******************************************************************
+******************************************************************
+NOTES FOR TODAY'S MEETING WITH SALOMEH:
+
+What I did:  Fixed the problems Brett noticed:  Invaliding sentences with mentions of goals, plans, desires, mentions of "I" (may go too far- could writer articulate relevant info in "I" form?)  Now recognizing checkboxes; but ignoring sentences that contain them.  
+
+Problems:  i- New auto-extracted rules can match phrases with different semantic structure, e.g. "supportive wife" vs. "cares for demented wife".  ii- Sometimes ignores relevant pieces, e.g. "care" vs. "urgent care".  iii- I added complex domain-neutral rules as basis for training; when I keep these runtime slows down 4-5 times.  Even with just the EBL it slows down, without about 200 new rules; this is concerning for the prospect of large rule sets.
+
+Take out past context words ("lived"), "history" in header.
+
+caregiver:  no  otherwise don't use caregiver
+
+"poa" = present on admission
+
+Exclude metions of power of attorney
+
+Next week I will meet with Salomah to talk about patient-level results.
+
+I will send MS results for batch 2, with current training.
+
+
+******************************************************************
+PROBLEMS:  
+
+TAKE WITH FOOD - WARNING:  ACCIDENTAL OVERDOSE OF
+      IRON-CONTAINING PRODUCTS IS A LEADING CAUSE OF  FATAL POISONING IN
+      CHILDREN
+	  
+Transportation bubbles up as concepr, through multi levels.  When combined with children, assume family + transportation == support.  "take" and "children" aren't even close.
+
+COULD:  i- let family + support exist in small window.  ii- Set limit on the degrees of separation of main words.  iii- Don't let general rules continue to pass up concepts with increasing content.  iv- Use neutral rules sparingly.  Know that the more DN rules are used, the more likely it is that the wrong concepts will bubble up, and that important concepts and combinations of concepts will get ignored.  v- Could take note whether the parse is during training or at runtime, and downweight annotation probability if it uses DN rule, which will percolate through larger DN structures.
+
+DO NOW:  Normalize take as :TAKE:.  Separate verb and noun forms of transportation, and write rules that combine :TAKE:, :TRANSPORT: and :TRANSPORTATION with :PATIENT: as :TRANSPORT_PATIENT:.  Replace :TRANSPORTATION: in the SS rules with :TRANSPORT_PATIENT:
+
+? What is a viable theory about the relation of domain-neutral and domain-specialized rules?  
+
+Thoughts:  i- DN rules are primarily for training. They combine information with no constraints as to whether the structure is correct, and they don't know how to combine the information that needs to be combined.  The more structured, the more the unconnected content, the more like to be wrong.  Also, the more unknown words, the more likely to be wrong.  I can assume that DN rules are going to get it wrong, and that the amount of wrongness is combinatorial.  ii- 
+

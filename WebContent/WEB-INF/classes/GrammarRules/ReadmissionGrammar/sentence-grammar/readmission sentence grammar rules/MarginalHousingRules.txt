@@ -1,0 +1,30 @@
+
+'(
+wordrule
+
+((ruleid not-homeless-but-unable-to-pay-rent-connotes-marginal-housing-sentence-rule)
+ (concept ":MARGINALLY_HOUSED:")
+ (words (":NOT_HOMELESS:") (":UNABLE_PAY_RENT:"))
+ (tests (notneg ?1)))
+ 
+((ruleid charity-housing-indicates-marginal-housing-rule)
+ (concept ":MARGINALLY_HOUSED:")
+ (ordered true)
+ (words (":LIVE_AT:")
+		(":CHARITY:" ":CHARITABLE_HOUSING:")))
+
+((ruleid live-in-non-living-space-is-marginal-living-rule)
+ (concept ":MARGINALLY_HOUSED:")
+ (ordered true)
+ (words (":LIVE_AT:" ":SLEEP:") 
+		(":VEHICLE:" ":TEMPORARY_LIVING:" ":CHAIR:" ":CHARITABLE_HOUSING:")))
+		
+((ruleid marginal-housing-phrase-word-rule) 
+ (concept ":MARGINALLY_HOUSED:")
+ (words ("couch surfs" "couch surfing")))
+
+
+)
+
+
+		

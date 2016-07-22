@@ -1,0 +1,16 @@
+'(
+wordrule
+(
+  (ruleid "AUTO-supportive-family-rule-0-2016/06/07 23:02:01") 
+  (specialized) 
+  (example-snippet "Supportive family") 
+  (ordered true) 
+  (sourceid "supportive-family-rule") 
+  (concept ":SUPPORTIVE_PERSON:") 
+  (stype "<PERSON>") 
+  (window 16.0) 
+  (words 
+    ("@caring-and-supportive-word-rule@") 
+    ("@family-definition-rule@")))
+
+)

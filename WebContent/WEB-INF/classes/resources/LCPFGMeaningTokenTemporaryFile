@@ -1,0 +1,12 @@
+friend-rule##:FRIEND:==9
+patient-has-supportive-person-connotes-social-support-rule##:POSSIBLE_SUPPORT:##patient-rule-1##:PATIENT:==8
+supportive-family-rule##:SUPPORTIVE_PERSON:##caring-and-supportive-word-rule##:CARING:==9
+patient-has-supportive-person-connotes-social-support-rule##:POSSIBLE_SUPPORT:##supportive-family-rule##:SUPPORTIVE_PERSON:==8
+supportive-family-rule##:SUPPORTIVE_PERSON:==9
+patient-hassupportive-person-connotes-social-support-rule##:POSSIBLE_SUPPORT:==1
+patient-hassupportive-person-connotes-social-support-rule##:POSSIBLE_SUPPORT:##patient-rule-1##:PATIENT:==1
+supportive-family-rule##:SUPPORTIVE_PERSON:##friend-rule##:FRIEND:==9
+patient-has-supportive-person-connotes-social-support-rule##:POSSIBLE_SUPPORT:==8
+patient-hassupportive-person-connotes-social-support-rule##:POSSIBLE_SUPPORT:##supportive-family-rule##:SUPPORTIVE_PERSON:==1
+caring-and-supportive-word-rule##:CARING:==9
+patient-rule-1##:PATIENT:==9

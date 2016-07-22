@@ -1,0 +1,67 @@
+'(
+wordrule
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; HOMELESS RULES
+
+((ruleid not-homeless-rule-1)
+ (concept ":NOT_HOMELESS:")
+ (words (":HOMELESS:"))
+ (tests (neg ?0))
+ (removeproperties directionality))
+ 
+ ;; 3/25/2016- Klooge problem with negation terms not being accounted for.
+((ruleid homelessness-gateway-rule)
+ (concept ":HOMELESS:")
+ (words (":POSSIBLY_HOMELESS:"))
+ ;; (tests (not (and (notneg ?0) (atct ?0 "no"))))
+ )
+ 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; LIVING SITUATION RULES
+
+;; 6-14-2016:  Assume that if the concept appears without further modification, it's useful.
+((ruleid living-at-home-or-living-space-document-rule)
+ (concept ":LIVE_AT_HOME:")
+ (words (":POSSIBLE_LIVE_AT_HOME:" ":RETURN_TO_OR_LIVE_AT_HOME:"))
+ (tests (and (notneg ?0) (<= ("getSentenceWordTokenLength" ?0) 8))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; SOCIAL SUPPORT DOCUMENT RULES 
+
+((ruleid gate-keeper-support-rule)
+
+ (concept ":HAVE_SUPPORT:")
+ (words (":POSSIBLE_SUPPORT:"))
+ (tests (notneg ?0) 
+		(not ("containsComma" ?0))
+		 (not ("containsUnderline" ?0))
+		(not (hcr ?0 ":PROVIDER:"))
+		(not (hcr ?0 ":MEDICAL_CARE:"))
+		(not (atct ?0 "and"))
+		;; fails- Expression.evalPattern() returns null for Vector
+		;; (not ("containsSomeConcepts" ?0 (":PROVIDER:" ":MEDICAL_CARE:")))
+	))
+	
+((ruleid gate-keeper-lack-support-rule)
+ (concept ":LACK_SUPPORT:")
+ (words (":POSSIBLE_LACK_SUPPORT:"))
+ (tests (notneg ?0) (not ("containsComma" ?0)) (not (atct ?0 "alternat"))))
+ 
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;; DEACTIVATED RULES
+ 
+ ;; 3/12/2016
+ 
+ 
+ ;; Example FP:  "has a cane to assist with ambulation".  Document grammar doesn't enforce interstitial
+ ;; constraint on "cane".
+((ruleidXXX receives-provision-of-care-document-rule)
+ (concept ":POSSIBLE_SUPPORT:")
+ (ordered true)
+ (words (":RECEIVES:") (":PROVISION_OF_CARE:")))
+ 
+
+ 
+
+)

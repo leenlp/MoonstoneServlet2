@@ -1,0 +1,166 @@
+'(
+wordrule
+
+;; 6/21/2016
+((ruleid nursing-home-assisted-living-means-nursing-home-complex-rule)
+ (stype "<COMPLEX_EVENT>")
+ (concept ":LIVE_IN_NURSING_HOME:")
+ (words (":LIVE_AT::NURSING_HOME::ASSISTED_LIVING:" ":LIVE_AT::NURSING_HOME:" 
+ 			":LIVING_ALONE::NURSING_HOME:" ":LIVE_AT::ALONE::NURSING_HOME:" 
+ 			":MOVE_TO::NURSING_HOME:"
+ 			":DISCHARGE::PATIENT::NURSING_HOME:"
+ 			))
+ (tests (notneg ?0)))
+ 			
+((ruleid live-at-home-complex-rule)
+ (stype "<COMPLEX_EVENT>")
+ (concept ":LIVE_AT_HOME:")
+ (words (":LIVE_AT::LIVING_SPACE:" 
+ 			":LIVE_AT::HOME:"
+ 			;; ??? Will this match "live at daughter's home"?
+ 			":LIVE_AT::FAMILY::HOME:"   
+ 			":DISCHARGE::PATIENT::HOME:"
+ 			":DISCHARGE::PATIENT::LIVE_AT_HOME:"
+ 			))
+ (tests (notneg ?0)))
+ 			
+((ruleid live-at-assisted-living-complex-rule)
+ (stype "<COMPLEX_EVENT>")
+ (concept ":LIVE_IN_ASSISTED_LIVING:")
+ (words (":LIVE_AT::ASSISTED_LIVING:" ":LIVING_ALONE::ASSISTED_LIVING:"
+ 			":LIVE_AT::ALONE::ASSISTED_LIVING:"))
+ (tests (notneg ?0)))
+
+ 
+;; "He is in assisted living" 
+((ruleid patient-located-in-assisted-living-rule)
+ (stype "<SENTENCE>")
+ (concept ":LIVE_IN_ASSISTED_LIVING:")
+ (ordered true)
+ (words (":PATIENT:") ("@living-location-types-rule@"))
+ (tests (notneg ?1) (hc ?1 ":ASSISTED_LIVING:")))
+ 
+ ;; "He is at a nursing home"
+((ruleid patient-located-in-nursing-home-rule)
+ (stype "<SENTENCE>")
+ (concept ":LIVE_IN_NURSING_HOME:")
+ (ordered true)
+ (words (":PATIENT:") ("@living-location-types-rule@"))
+ (tests (notneg ?1) (hc ?1 ":NURSING_HOME:")))
+ 
+ ;; "patient at clc"
+ ((ruleid patient-located-in-group-home-rule)
+  (stype "<SENTENCE>")
+  (concept ":LIVE_IN_GROUP_HOME:")
+  (ordered true)
+  (words (":PATIENT:") ("@living-location-types-rule@"))
+  (tests (notneg ?1) (or (hc ?1 ":GROUP_HOME:") (hc ?1 ":COMMUNITY_LIVING:"))))
+
+((ruleid patient-located-at-home-rule)
+ (stype "<SENTENCE>")
+ (concept ":LIVE_AT_HOME:")
+ (ordered true)
+ (words (":PATIENT:") 
+		(
+		;; "@living-location-types-rule@" ;; Matches too many "patient home" phrases
+		":RETURN_TO_OR_LIVE_AT_HOME:"))
+ (tests (notneg ?1) (or (hcr ?1 ":LIVING_SPACE:") (hcr ?1 ":HOME:"))))
+ 
+((ruleid general-patient-location-rule)
+ (stype "<COMPLEX_EVENT>")
+ (concept ?1)
+ (ordered true)
+ (words (":DISCHARGE:" ":ADMISSION:" ":PLACEMENT:" ":LIVE_AT:" ":MOVE_TO:" ":RETURN:") 
+		("@living-location-types-rule@")))
+ 
+((ruleid living-location-types-rule)
+ (concept ?0)
+ (words (":COMMUNITY_LIVING:" ":GROUP_HOME:" ":NURSING_HOME:" ":ASSISTED_LIVING:" 
+			":LIVING_SPACE:" ":MARGINAL_LIVING_SPACE:" ":HOME:")))
+ 
+((ruleid community-living-conglomerate-rule)
+ (concept ":COMMUNITY_LIVING:")
+ (words (":BENEFIT_LIVING_CENTER:" ":SENIOR_LIVING:")))
+ 
+ 
+ ;; Updated 6-14-2016
+((ruleid living-at-home-or-living-space-rule)
+ (stype "<COMPLEX_EVENT>")
+ (concept ":RETURN_TO_OR_LIVE_AT_HOME:")
+ (ordered true)
+ (words (":LIVE_AT:" ":DISCHARGE:" ":RETURN:" "back")
+		(":HOME:" ":LIVING_SPACE:")))
+
+((ruleid patient-lives-at-home-rule)
+ (stype "<SENTENCE>")
+ (concept ":LIVE_AT_HOME:")
+ (ordered true)
+ (words (":PATIENT:") 
+ 		("@general-patient-location-rule@" "@live-at-own-home-rule@"))
+ (tests (notneg ?1) (or (hc ?1 ":LIVING_SPACE:") (hcr ?1 ":HOME:"))))
+ 
+((ruleid live-at-own-home-rule)
+ (stype "<COMPLEX_EVENT>")
+ (concept ":LIVE_AT_HOME:")
+ (ordered true)
+ (words (":LIVE_AT:") (":HOME:" ":LIVING_SPACE:" ":OWN_HOME:")))
+  
+((ruleid patient-seen-in-alf-rule-connotes-lives-in-assisted-living)
+ (stype "<COMPLEX_EVENT>")
+ (concept ":LIVE_IN_ASSISTED_LIVING:")
+ (ordered true)
+ (words (":PATIENT:") (":EXAMINE:") (":ASSISTED_LIVING:")))
+
+((ruleid nonpatient-persons-living-space-rule)
+ (stype "<LIVING_SPACE>")
+ (concept ":NON-PATIENT-HOME:")
+ (words (":NON-PATIENT-PERSON:") ("<LIVING_SPACE>")))
+ 
+;; MARGINAL LIVING
+
+((ruleid live-at-marginal-living-space-rule)
+ (stype "<COMPLEX_EVENT>")
+ (concept ":NOT_HOMELESS_BUT_OTHER_LIVING_SITUATION:")
+ (ordered true)
+ (words (":LIVE_AT:") (":MARGINAL_LIVING_SPACE:" ":NON-PATIENT-HOME:")))
+
+;; e.g. "lives with son"
+((ruleid living-with-someone-indicates-other-living-situation-rule)
+ (stype "<COMPLEX_EVENT>")
+ (concept ":NOT_HOMELESS_BUT_OTHER_LIVING_SITUATION:")
+ (words ("@lives-with-someone-means-not-living-alone-rule-1@"))
+ (tests (notneg ?0)
+		(not (hcr ?0 ":WIFE:"))
+		(not (hcr ?0 ":SPOUSE:"))
+		(not (hcr ?0 ":HOME:"))))
+		
+((ruleid complex-concept-not-homeless-but-other-living-situation-rule)
+ (stype "<COMPLEX_EVENT>")
+ (concept ":NOT_HOMELESS_BUT_OTHER_LIVING_SITUATION:")
+ (words (":LIVE_AT::FAMILY::FRIEND:"
+			":LIVE_AT::FAMILY::MARGINAL_LIVING_SPACE:"
+			":LIVE_AT::MARGINAL_LIVING_SPACE::LIVING_SPACE:"
+ 			))
+ (tests (notneg ?0)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Not living at home
+
+((ruleid negated-living-at-home-indicates-does-not-live-at-home-rule)
+ (stype "<COMPLEX_EVENT>")
+ (concept ":DOES_NOT_LIVE_AT_HOME:")
+ (words (":LIVE_AT_HOME:"))
+ (tests (neg ?0))
+ (removeproperties directionality))
+ 
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Living-related
+
+((ruleid number-room-home-rule)
+ (example-snippet "2 bedroom home")
+ (concept ":HOME:")
+ (ordered true)
+ (words (":NUMBER:") (":ADL_FACILITY:" ":ROOM:") ("<LIVING_SPACE>")))
+ 
+
+)

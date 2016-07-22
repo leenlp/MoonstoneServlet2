@@ -1,0 +1,25 @@
+'(
+wordrule
+
+((ruleid shelter-denotes-homeless-event-rule)
+ (concept ":POSSIBLY_HOMELESS:")
+ (words (":LIVE_AT:") (":SHELTER:")))
+ 
+((ruleid patient-is-homeless-rule)
+ (concept ":POSSIBLY_HOMELESS:")
+ (words (":PATIENT:") (":HOMELESSNESS:"))
+ (tests (notneg ?1)))
+ 
+;; "now homeless", "housing situation is homeless":  Anything to have >1 word...
+((ruleid housing-situation-homeless-rule)
+ (concept ":POSSIBLY_HOMELESS:")
+ (words ("housing" "now") (":HOMELESSNESS:"))
+ (tests (notneg ?1)))
+
+((ruleid homeless-word-rule)
+ (concept ":HOMELESSNESS:")
+ (words ("homeless" "homelessness")))
+ 
+ )
+ 
+	    

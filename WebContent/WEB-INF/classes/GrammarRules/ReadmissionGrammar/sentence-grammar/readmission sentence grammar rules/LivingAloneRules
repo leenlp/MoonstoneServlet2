@@ -1,0 +1,130 @@
+'(
+wordrule
+
+;;;;;;;;;
+;; Living alone
+
+;; TEST, 6/23/2016 (expensive!)
+((ruleid test-complex-rule-with-live-alone-string-rule)
+ (specialized)
+ (concept ":LIVING_ALONE:")
+ (words (?interpreted))
+ (tests ("ruleHasComplexConcept" ?rule)
+ 	    ("conceptStartsWithString" ?0 ":LIVING_ALONE:") 
+ 	    (notneg ?0)))
+
+((ruleid complex-rule-living-alone-rule)
+ (specialized)
+ (concept ":LIVING_ALONE:" )
+ (words (":LIVE_AT::LIVING_SPACE::LIVING_ALONE:" 
+ 		":LIVE_AT::LIVING_ALONE:" ":LIVE_AT::PATIENT::LIVING_ALONE:"
+ 		":LIVE_AT::LIVING_ALONE::LIVING_SPACE:"
+ 		":LIVE_AT::LIVING_SPACE::ALONE:"
+ 		":LIVE_AT::ALONE::LIVING_SPACE:"
+ 		":LIVE_AT::ALONE::HOME:"
+ 		":LIVE_AT::ALONE:"
+ 		":LIVE_AT::ALONE::MARRIAGE:"
+ 		":LIVE_AT::ALONE::PATIENT:"
+
+ 		":LIVE_AT::HOME::ALONE:"
+ 		":LIVE_AT::HOME::LIVING_ALONE:"
+ 		":LIVING_ALONE::LIVING_SPACE:" ":LIVING_ALONE::HOME:"
+ 		":MARRIAGE::LIVING_ALONE:"
+ 		":LIVING_ALONE::COGNITIVE_IMPAIRMENT:"
+ 		":LIVE_AT::ALONE::COGNITIVE_IMPAIRMENT:"
+ 		":LIVE_AT::LIVING_ALONE::MARRIAGE:"
+ 		":LIVE_AT::ALONE::STREET:"
+ 		)))
+ 		
+ ;; e.g. "lives alone w/o adequate support"
+((ruleid complex-living-alone-support-rule)
+ (specialized)
+ (concept ":LIVING_ALONE:" )
+ (words (":LIVING_ALONE::SUPPORT:"
+ 		":LIVING_ALONE::CARE:"))
+ (tests (neg ?0)))
+ 
+ ;; e.g. "no one lives with this patient"
+((ruleid no-one-living-with-patient-connotes-living-alone-rule)
+ (concept ":LIVING_ALONE:")
+ (ordered true)
+ (words 
+	(":NO-ONE:") (":LIVE_AT:") (":PATIENT:")))
+	
+((ruleid living-alone-rule-1)
+ (concept ":LIVING_ALONE:")
+ (ordered true)
+ (words (":LIVE_AT:") (":ALONE:")))
+ 
+((ruleid header-lives-alone-boolean-rule)
+ (concept ":LIVING_ALONE:")
+ (words (":HEADER_TRUE:" ":HEADER_FALSE:"))
+ (tests ("headerContainsString" ?0 "lives alone")
+		("headerCoversSingleWord" ?0))
+ (properties (directionality (if (neg ?0) "negated" "affirmed"))))
+ 
+ ;;;;;;;;;;;;;;;;;;;;;;
+ ;; NOT LIVING ALONE
+ 
+((ruleid lives-with-means-not-living-alone-rule-1)
+ (concept ":NOT_LIVING_ALONE:")
+ (words (":LIVE_WITH_PERSON:"))
+ (tests (notneg ?0)))
+ 
+ ((ruleid living-alone-with-family-means-not-living-alone-rule)
+ (concept ":NOT_LIVING_ALONE:")
+ (words (":LIVING_ALONE::FAMILY:" ":LIVING_ALONE::SPOUSE:" 
+ 		":LIVING_ALONE::FRIEND:" ":LIVING_ALONE::LIVING_SPACE::FAMILY:" 
+ 		":LIVING_ALONE::LIVING_SPACE::FRIEND:"
+ 		":NOT_LIVING_ALONE:"
+ 		":LIVE_AT::FRIEND:" ":LIVE_AT::LIVING_SPACE::FAMILY:" 
+ 		":LIVE_AT::FAMILY:" ":LIVE_AT::NON-PATIENT-PERSON:"
+ 		":LIVE_AT::LIVING_SPACE::FRIEND:" 
+ 		":LIVE_AT::HOME::SINGLE_FAMILY_MEMBERS:"
+ 		":LIVE_AT::FAMILY::ADL_FACILITY:"
+ 		":LIVE_AT::HOME::NOT_LIVING_ALONE:"
+ 		":LIVE_AT::PROVIDER:"  ;; e.g. "live with his wife who is provider"
+ 		":LIVE_AT::ADL_FACILITY::LIVING_SPACE:"  ;; "lives in two bedroom home"
+ 		)))
+ 
+;; if the patient lives with someone else, he does not live alone
+((ruleid lives-with-someone-means-not-living-alone-rule-1)
+  (concept ":NOT_LIVING_ALONE:")
+  (ordered true)
+  (words (":LIVE_AT:" ":SLEEP:") 
+		("_PREP_") 
+		(":FAMILY:" ":FRIEND:")))
+		
+;; e.g. "daughter lives with this patient"
+((ruleid person-living-with-patient-connotes-not-living-alone-rule)
+ (concept ":NOT_LIVING_ALONE:")
+ (ordered true)
+ (words 
+	(":FRIEND:" ":FAMILY:")
+	(":LIVE_AT:") (":PATIENT:"))
+ (tests (not (atctv ?* ("near" "mile" "close")))))
+	
+((ruleid negated-living-alone-is-not-living-alone-rule)
+ (concept ":NOT_LIVING_ALONE:")
+ (words (":LIVING_ALONE:"))
+ (tests (neg ?0))
+ (removeproperties directionality))
+ 
+((ruleid person-at-patients-home-indicates-not-living-alone-rule)
+ (concept ":NOT_LIVING_ALONE:")
+ (words (":PERSON_AT_PATIENTS_HOME:")))
+ 
+((ruleid patient-and-spouse-reside-together-indicates-not-living-alone-rule)
+ (concept ":NOT_LIVING_ALONE:")
+ (ordered true)
+ (words ("@patient-and-spouse-conjunct-rule@") (":LIVE_AT:")))
+
+((ruleid person-in-patients-home-connotes-not-living-alone-rule)
+ (concept ":NOT_LIVING_ALONE:")
+ (ordered true)
+ (words (":NON-PATIENT-PERSON:")
+		("_PREP_") 
+		(":LIVING_SPACE:")))
+ 
+  
+)
